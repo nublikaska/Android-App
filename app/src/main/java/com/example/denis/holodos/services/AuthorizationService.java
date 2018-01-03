@@ -1,6 +1,8 @@
 package com.example.denis.holodos.services;
 
 import com.example.denis.holodos.modules.User;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import javax.ejb.LocalBean;
@@ -66,31 +70,48 @@ public class AuthorizationService {
         }
     }
 
-    public User authenticationUser(String login) throws IOException {
-        String url = "http://localhost:8080/service/api/users/" + login;
+    public User authenticationUser(String login) {
+        try {
+            String url = "http://localhost:8080/service/api/users/" + login;
 
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        con.setRequestMethod("GET");
+            con.setRequestMethod("GET");
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new ParameterNamesModule())
+                    .registerModule(new Jdk8Module())
+                    .registerModule(new JavaTimeModule());
+            objectMapper.findAndRegisterModules();
+            objectMapper.registerModule(new JavaTimeModule());
+            return objectMapper.readValue(response.toString(), User.class);
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+            return null;
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+            return null;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        in.close();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new ParameterNamesModule())
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule());
-        objectMapper.findAndRegisterModules();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper.readValue(response.toString(), User.class);
     }
 
     public boolean checkUser(User user, String login, String password) {
