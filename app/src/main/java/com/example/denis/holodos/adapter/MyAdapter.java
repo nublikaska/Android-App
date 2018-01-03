@@ -1,8 +1,12 @@
-package com.example.denis.holodos;
+package com.example.denis.holodos.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.denis.holodos.adapter.fragments.FridgeFragment;
+import com.example.denis.holodos.adapter.fragments.MessageHistoryFragment;
+import com.example.denis.holodos.adapter.fragments.ShoppingListFragment;
 
 /**
  * Created by Denis on 09.12.2017.
