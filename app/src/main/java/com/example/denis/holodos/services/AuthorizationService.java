@@ -20,11 +20,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-
-@Stateless
-@LocalBean
 public class AuthorizationService {
 
     public boolean addUser(String login, String password) {

@@ -13,19 +13,14 @@ import android.widget.Toast;
 
 import com.example.denis.holodos.R;
 import com.example.denis.holodos.adapter.MyAdapter;
-import com.example.denis.holodos.beans.authorization.Authentication;
-
-import javax.inject.Inject;
-import javax.validation.Constraint;
-import javax.ws.rs.core.Context;
+import com.example.denis.holodos.implementsService.Authentication;
 
 public class MainActivity extends AppCompatActivity {
 
     private static int requestCodeMainActivity = 0;
     private SharedPreferences preferences;
 
-    @Inject
-    private Authentication authentication;
+    private Authentication authentication = new Authentication();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

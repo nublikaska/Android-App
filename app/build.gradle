@@ -1,22 +1,29 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.1'
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.example.denis.holodos"
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion 26
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        multiDexEnabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
             minifyEnabled false
+            sourceCompatibility = 1.8
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        //sourceCompatibility JavaVersion.VERSION_1_8
+        //targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -30,14 +37,15 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:25.4.0'
-    compile 'com.google.android.gms:play-services:9.8.0'
-    compile 'javax.persistence:persistence-api:1.0'
-    compile 'javax.xml.bind:jaxb-api:2.1'
-    compile 'javax.json.bind:javax.json.bind-api:1.0'
+    //implementation 'com.google.guava:guava:23.0'
+    compile 'com.google.android.gms:play-services:11.4.0'
     compile group: 'io.github.cquiroz', name: 'scala-java-time_2.12', version: '2.0.0-M12'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.2'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.2'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.2'
+    compile group: 'com.fatboyindustrial.gson-javatime-serialisers', name: 'gson-javatime-serialisers', version: '1.1.1'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.2'
     compile 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.2'
-    compile 'javax:javaee-api:8.0'
+    //compile 'javax:javaee-api:8.0'
+    //compile group: 'org.scala-lang', name: 'scala-library', version: '2.12.4'
 }

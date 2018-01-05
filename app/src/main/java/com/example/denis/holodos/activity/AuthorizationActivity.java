@@ -13,15 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.denis.holodos.R;
-import com.example.denis.holodos.beans.authorization.Authentication;
-import com.example.denis.holodos.modules.User;
-import com.example.denis.holodos.services.AuthorizationService;
-
-import java.io.IOException;
-
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.validation.constraints.Null;
+import com.example.denis.holodos.implementsService.Authentication;
 
 /**
  * Created by Denis on 03.01.2018.
@@ -36,8 +28,7 @@ public class AuthorizationActivity extends Activity {
     private SharedPreferences preferences;
     public static final String APP_PREFERENCES = "APP_PREFERENCES";
 
-    @Inject
-    private Authentication authentication;
+    private Authentication authentication = new Authentication();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable final PersistableBundle persistentState) {
