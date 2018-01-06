@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,7 @@ import com.example.denis.holodos.implementsService.Authentication;
  * Created by Denis on 03.01.2018.
  */
 
-public class AuthorizationActivity extends Activity {
+public class AuthorizationActivity extends AppCompatActivity {
 
     private Button btnLogin;
     private EditText textLogin;
@@ -31,8 +32,8 @@ public class AuthorizationActivity extends Activity {
     private Authentication authentication = new Authentication();
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable final PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
 
         btnLogin = (Button) findViewById(R.id.btnLogin);

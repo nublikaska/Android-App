@@ -31,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
         if (preferences.contains("login") && (preferences.contains("password"))) {
            if (!(authentication.Login(preferences.getString("login", ""), preferences.getString("password", "")))) {
                Intent intent = new Intent(MainActivity.this, AuthorizationActivity.class);
+               startActivity(intent);
            }
+        } else {
+            Intent intent = new Intent(MainActivity.this, AuthorizationActivity.class);
+            startActivity(intent);
         }
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);

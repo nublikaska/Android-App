@@ -3,7 +3,7 @@ package com.example.denis.holodos.modules;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User extends Model {
+public class User /*extends Model*/ {
 
     private static final long serialVersionUID = 1L;
 

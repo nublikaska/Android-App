@@ -4,9 +4,6 @@ import com.example.denis.holodos.modules.User;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,11 +82,11 @@ public class AuthorizationService {
             in.close();
 
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new ParameterNamesModule())
+            /*objectMapper.registerModule(new ParameterNamesModule())
                     .registerModule(new Jdk8Module())
                     .registerModule(new JavaTimeModule());
             objectMapper.findAndRegisterModules();
-            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.registerModule(new JavaTimeModule());*/
             return objectMapper.readValue(response.toString(), User.class);
         } catch (ProtocolException e) {
             e.printStackTrace();

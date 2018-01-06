@@ -1,10 +1,9 @@
 package com.example.denis.holodos.modules;
-
-import org.threeten.bp.LocalDateTime;
+import java.time.LocalDateTime;
 
 import java.math.BigDecimal;
 
-public class Check extends Model {
+public class Check /*extends Model*/ {
 
     private static final long serialVersionUID = 1L;
 
