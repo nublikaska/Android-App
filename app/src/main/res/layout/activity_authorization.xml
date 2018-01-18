@@ -21,7 +21,8 @@
             android:layout_marginBottom="10dp"
             android:inputType="textEmailAddress"
             android:padding="10dp"
-            android:singleLine="true">
+            android:singleLine="true"
+            android:hint="@string/login">
         </EditText>
 
         <EditText
@@ -31,7 +32,8 @@
             android:layout_marginBottom="10dp"
             android:inputType="textPassword"
             android:padding="10dp"
-            android:singleLine="true">
+            android:singleLine="true"
+            android:hint="@string/password">
         </EditText>
 
         <!-- Login Button -->
@@ -41,18 +43,18 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:text="Вход">
+            android:text="@string/signIn">
         </Button>
 
         <!-- Link to Login Screen -->
 
         <Button
-            android:id="@+id/btnLinkToRegisterScreen"
+            android:id="@+id/signUp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"
             android:textAllCaps="false"
-            android:text="Регистрация"
+            android:text="@string/signUp"
             android:textSize="15dp" />
     </LinearLayout>
 

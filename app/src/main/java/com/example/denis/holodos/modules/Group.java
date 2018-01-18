@@ -3,7 +3,7 @@ package com.example.denis.holodos.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Group /*extends Model*/ {
+public class Group extends Model {
 
     private static final long serialVersionUID = 1L;
 

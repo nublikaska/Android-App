@@ -3,6 +3,7 @@ package com.example.denis.holodos.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -14,19 +15,25 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
 
+import com.example.denis.holodos.ParseTask.ParseTaskReceipt;
 import com.example.denis.holodos.R;
+import com.example.denis.holodos.modules.receipts.Receipt;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Denis on 02.01.2018.
  */
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends finishedAsync {
 
     SurfaceView cameraPreview;
     TextView txtResult;
@@ -116,14 +123,41 @@ public class CameraActivity extends AppCompatActivity {
                             Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(1000);
                             txtResult.setText(qrcodes.valueAt(0).displayValue);
-                            Intent answerIntent = new Intent();
-                            answerIntent.putExtra("CameraActivity", qrcodes.valueAt(0).displayValue);
-                            setResult(RESULT_OK, answerIntent);
-                            finish();
+
+                            String[] str = qrcodes.valueAt(0).displayValue.split("&");
+                            Map m = new HashMap<String, String>();;
+                            for (String s : str ) {
+                                String[] split = s.split("=");
+                                switch(s.split("=")[0]) {
+                                    case "fn" :
+                                        m.put("fn", split[1]);
+                                        break;
+                                    case "i" :
+                                        m.put("i", split[1]);
+                                        break;
+                                    case "fp" :
+                                        m.put("fp", split[1]);
+                                        break;
+                                }
+                            }
+                            SharedPreferences preferences = getSharedPreferences(MainActivity.APP_PREFERENCES, android.content.Context.MODE_PRIVATE);
+                            String login = preferences.getString("login", "");
+                            ParseTaskReceipt parseTaskReceipt = new ParseTaskReceipt(CameraActivity.this);
+                            parseTaskReceipt.execute(login, (String)m.get("fn"), (String)m.get("i"), (String)m.get("fp"));
                         }
                     });
                 }
             }
         });
+    }
+
+    @Override
+    public void finishedAsyncTask(Receipt receipt) {
+        super.finishedAsyncTask(receipt);
+
+        Intent answerIntent = new Intent();
+        answerIntent.putExtra("receipt", receipt);
+        setResult(RESULT_OK, answerIntent);
+        finish();
     }
 }

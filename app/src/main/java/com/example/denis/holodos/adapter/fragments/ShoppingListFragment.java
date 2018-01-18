@@ -1,5 +1,6 @@
 package com.example.denis.holodos.adapter.fragments;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,8 +31,9 @@ public class ShoppingListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shopping_list_fragment, container, false);
+        SharedPreferences preferences = getActivity().getSharedPreferences("APP_PREFERENCES", android.content.Context.MODE_PRIVATE);
 
-        String[] mGroupsArray = new String[] { "Продукты", "Все для дома", "Маленькие хотенья", "Другое" };
+        String[] mGroupsArray = new String[] { "Аккаунт", preferences.getString("login", "") + " l", preferences.getString("password", "") + " p", "Другое" };
 
         String[] mWinterMonthsArray = new String[] { "колбаса докторская", "хлеб луковый", "молоко" };
         String[] mSpringMonthsArray = new String[] { "стиральный порошок Persil", "губка для мытья посуды", "тряпку для пыли" };

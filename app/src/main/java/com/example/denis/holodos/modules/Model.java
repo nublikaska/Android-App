@@ -7,7 +7,7 @@ public abstract class Model implements Serializable {
 
 //    private static final long serialVersionUID = 1L;
 //
-//    private long id;
+   private long id;
 //
 //    private boolean archived;
 //
@@ -17,17 +17,17 @@ public abstract class Model implements Serializable {
 //
 //    private LocalDateTime archiveDateTime;
 //
-//    public Model() {
-//
-//    }
-//
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
-//    }
+    public Model() {
+
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 //
 //    public boolean isArchived() {
 //        return archived;

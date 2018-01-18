@@ -5,37 +5,38 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.denis.holodos.ParseTask.ParseTaskLogin;
 import com.example.denis.holodos.R;
 import com.example.denis.holodos.adapter.MyAdapter;
-import com.example.denis.holodos.implementsService.Authentication;
+import com.example.denis.holodos.modules.receipts.Receipt;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends finishedAsync {
 
-    private static int requestCodeMainActivity = 0;
+    public static final int requestCodeMainActivity = 1;
     private SharedPreferences preferences;
+    private ParseTaskLogin parseTaskLogin;
 
-    private Authentication authentication = new Authentication();
+    public static final String APP_PREFERENCES = "APP_PREFERENCES";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        preferences = getSharedPreferences(AuthorizationActivity.APP_PREFERENCES, android.content.Context.MODE_PRIVATE);
+        preferences = getSharedPreferences(APP_PREFERENCES, android.content.Context.MODE_PRIVATE);
         if (preferences.contains("login") && (preferences.contains("password"))) {
-           if (!(authentication.Login(preferences.getString("login", ""), preferences.getString("password", "")))) {
-               Intent intent = new Intent(MainActivity.this, AuthorizationActivity.class);
-               startActivity(intent);
-           }
+            parseTaskLogin = new ParseTaskLogin(MainActivity.this);
+            parseTaskLogin.execute(preferences.getString("login", ""), preferences.getString("password", ""));
         } else {
-            Intent intent = new Intent(MainActivity.this, AuthorizationActivity.class);
-            startActivity(intent);
+            Intent authorizationActivity = new Intent(MainActivity.this, AuthorizationActivity.class);
+            startActivity(authorizationActivity);
         }
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -58,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, CameraActivity.class);
                 startActivityForResult(intent, requestCodeMainActivity);
                 return true;
+            case R.id.exit:
+                Intent authorizationActivity = new Intent(MainActivity.this, AuthorizationActivity.class);
+                preferences.edit().clear().commit();
+                startActivity(authorizationActivity);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -66,13 +72,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == requestCodeMainActivity) {
-            if (resultCode == RESULT_OK) {
-                String thiefname = data.getStringExtra("CameraActivity");
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        thiefname, Toast.LENGTH_SHORT);
-                toast.show();
+
+        switch (requestCode) {
+            case requestCodeMainActivity:
+                if (resultCode == RESULT_OK) {
+                Receipt receipt = (Receipt) data.getSerializableExtra("receipt");
+
+                break;
             }
+            break;
+        }
+    }
+
+    @Override
+    public void finishedAsyncTask(boolean isLogin, String login, String password) {
+        super.finishedAsyncTask(isLogin, login, password);
+        if (!isLogin) {
+            Intent authorizationActivity = new Intent(MainActivity.this, AuthorizationActivity.class);
+            startActivity(authorizationActivity);
         }
     }
 }

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -18,12 +19,15 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 public class AuthorizationService {
+    private HttpURLConnection urlConnection = null;
+    private BufferedReader reader = null;
+    private String resultJson = "";
 
     public boolean addUser(String login, String password) {
         try {
             String ACCEPT = "application/json";
             String CONTENT_TYPE = "application/json";
-            String url = "http://localhost:8080/service/api/users";
+            String url = "http://192.168.42.62:8080/service/api/users";
 
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -62,48 +66,30 @@ public class AuthorizationService {
         }
     }
 
-    public User authenticationUser(String login) {
+    public String authenticationUser(String login) {
         try {
-            String url = "http://localhost:8080/service/api/users/" + login;
+            URL url = new URL("http://192.168.42.62:8080/service/api/users/" + login);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
 
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
 
-            con.setRequestMethod("GET");
+            reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
             }
-            in.close();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            /*objectMapper.registerModule(new ParameterNamesModule())
-                    .registerModule(new Jdk8Module())
-                    .registerModule(new JavaTimeModule());
-            objectMapper.findAndRegisterModules();
-            objectMapper.registerModule(new JavaTimeModule());*/
-            return objectMapper.readValue(response.toString(), User.class);
-        } catch (ProtocolException e) {
+            resultJson = buffer.toString();
+
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-            return null;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return "";
         }
+        return resultJson;
     }
 
     public boolean checkUser(User user, String login, String password) {

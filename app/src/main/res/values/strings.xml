@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">holodos</string>
-    <string name="camera">camera</string>
-    <string name="result_text_default">Please focus camera to QR Code</string>
+    <string name="camera">камера</string>
+    <string name="exit">выход</string>
+    <string name="signIn">Войти</string>
+    <string name="signUp">Регистрация</string>
+    <string name="registration">Регистрация</string>
+    <string name="result_text_default">Сфокусируйтесь на QR-коде</string>
+    <string name="login">логин</string>
+    <string name="password">пароль</string>
 </resources>
