@@ -44,13 +44,18 @@ public class ParseTaskReceipt extends AsyncTask<String, Void, String> {
         //JsonDocumentClass = JsonDocumentClass.replaceAll("\\,\\Warchived\\W\\:false\\,\\WcreationDateTime\\W{2}\\[(.*?)\\]\\,\\WarchiveDateTime\\W\\:null", "");
         //JsonDocumentClass = JsonDocumentClass.replaceAll("\\,\\WdateTime\\W{2}\\[(.*?)\\]", "");
 
-        Receipt receipt;
+        if (!JsonDocumentClass.equals("error")) {
 
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        receipt = gson.fromJson(JsonDocumentClass, Receipt.class);
+            Receipt receipt;
 
-        activity.finishedAsyncTask(receipt);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            receipt = gson.fromJson(JsonDocumentClass, Receipt.class);
+
+            activity.finishedAsyncTask(receipt);
+        } else {
+            activity.finishedAsyncTask();
+        }
     }
 
 

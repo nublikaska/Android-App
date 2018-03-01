@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -40,6 +41,9 @@ public class CameraActivity extends finishedAsync {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
+    Camera camera;
+
+    private boolean isDetected = false;
 
 
     @Override
@@ -75,6 +79,7 @@ public class CameraActivity extends finishedAsync {
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
                 .setRequestedPreviewSize(640, 480)
+                .setAutoFocusEnabled(true)
                 .build();
         //Add Event
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -83,7 +88,7 @@ public class CameraActivity extends finishedAsync {
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     //Request permission
                     ActivityCompat.requestPermissions(CameraActivity.this,
-                            new String[]{Manifest.permission.CAMERA},RequestCameraPermissionID);
+                            new String[]{Manifest.permission.CAMERA}, RequestCameraPermissionID);
                     return;
                 }
                 try {
@@ -114,40 +119,45 @@ public class CameraActivity extends finishedAsync {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                if(qrcodes.size() != 0)
-                {
+                if (qrcodes.size() != 0) {
                     txtResult.post(new Runnable() {
                         @Override
                         public void run() {
                             //Create vibrate
-                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(1000);
+//                            Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+//                            vibrator.vibrate(1000);
                             txtResult.setText(qrcodes.valueAt(0).displayValue);
 
-                            String[] str = qrcodes.valueAt(0).displayValue.split("&");
-                            Map m = new HashMap<String, String>();;
-                            for (String s : str ) {
-                                String[] split = s.split("=");
-                                switch(s.split("=")[0]) {
-                                    case "fn" :
-                                        m.put("fn", split[1]);
-                                        break;
-                                    case "i" :
-                                        m.put("i", split[1]);
-                                        break;
-                                    case "fp" :
-                                        m.put("fp", split[1]);
-                                        break;
-                                }
-                            }
-                            SharedPreferences preferences = getSharedPreferences(MainActivity.APP_PREFERENCES, android.content.Context.MODE_PRIVATE);
-                            String login = preferences.getString("login", "");
-                            ParseTaskReceipt parseTaskReceipt = new ParseTaskReceipt(CameraActivity.this);
-                            parseTaskReceipt.execute(login, (String)m.get("fn"), (String)m.get("i"), (String)m.get("fp"));
+                            Intent answerIntent = new Intent();
+                            answerIntent.putExtra("receiptStr", (qrcodes.valueAt(0).displayValue));
+                            setResult(RESULT_OK, answerIntent);
+                            finish();
+
+//                            String[] str = qrcodes.valueAt(0).displayValue.split("&");
+//                            Map m = new HashMap<String, String>();
+//
+//                            for (String s : str) {
+//                                String[] split = s.split("=");
+//                                switch (s.split("=")[0]) {
+//                                    case "fn":
+//                                        m.put("fn", split[1]);
+//                                        break;
+//                                    case "i":
+//                                        m.put("i", split[1]);
+//                                        break;
+//                                    case "fp":
+//                                        m.put("fp", split[1]);
+//                                        break;
+//                                }
+//                            }
+//                            SharedPreferences preferences = getSharedPreferences(MainActivity.APP_PREFERENCES, android.content.Context.MODE_PRIVATE);
+//                            String login = preferences.getString("login", "");
+//                            ParseTaskReceipt parseTaskReceipt = new ParseTaskReceipt(CameraActivity.this);
+//                            parseTaskReceipt.execute(login, (String) m.get("fn"), (String) m.get("i"), (String) m.get("fp"));
                         }
                     });
                 }
-            }
+                }
         });
     }
 
@@ -155,9 +165,9 @@ public class CameraActivity extends finishedAsync {
     public void finishedAsyncTask(Receipt receipt) {
         super.finishedAsyncTask(receipt);
 
-        Intent answerIntent = new Intent();
-        answerIntent.putExtra("receipt", receipt);
-        setResult(RESULT_OK, answerIntent);
-        finish();
+//        Intent answerIntent = new Intent();
+//        answerIntent.putExtra("receipt", receipt);
+//        setResult(RESULT_OK, answerIntent);
+//        finish();
     }
 }

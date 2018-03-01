@@ -1,9 +1,7 @@
 package com.example.denis.holodos.services;
 
+import com.example.denis.holodos.App;
 import com.example.denis.holodos.modules.User;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +25,7 @@ public class AuthorizationService {
         try {
             String ACCEPT = "application/json";
             String CONTENT_TYPE = "application/json";
-            String url = "http://192.168.42.62:8080/service/api/users";
+            String url = App.BaseUrl + "/service/api/users";
 
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -68,7 +66,7 @@ public class AuthorizationService {
 
     public String authenticationUser(String login) {
         try {
-            URL url = new URL("http://192.168.42.62:8080/service/api/users/" + login);
+            URL url = new URL(App.BaseUrl + "/service/api/users/" + login);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();

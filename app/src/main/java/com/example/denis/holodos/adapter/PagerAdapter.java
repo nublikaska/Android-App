@@ -12,37 +12,49 @@ import com.example.denis.holodos.adapter.fragments.ShoppingListFragment;
  * Created by Denis on 09.12.2017.
  */
 
-public class MyAdapter extends FragmentPagerAdapter {
+public class PagerAdapter extends FragmentPagerAdapter {
+    private FragmentManager fm;
 
-    public MyAdapter(FragmentManager fm) {
+    public PagerAdapter(FragmentManager fm) {
         super(fm);
+        this.fm = fm;
     }
 
     @Override
     public int getCount() {
         return(3);
     }
+
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 1:
-                return new FridgeFragment();
-            case 2:
+            case 0:
                 return new MessageHistoryFragment();
-            default:
+            case 1:
                 return new ShoppingListFragment();
+            case 2:
+                return new FridgeFragment();
+            default:
+                return new MessageHistoryFragment();
+
         }
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
-            case 1:
-                return "Холодос";
-            case 2:
+            case 0:
                 return "История операций";
-            default:
+            case 1:
                 return "Список покупок";
+            case 2:
+                return "Холодос";
+            default:
+                return  "История операций";
         }
+    }
+
+    public FragmentManager getFm() {
+        return fm;
     }
 }

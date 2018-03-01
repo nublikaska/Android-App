@@ -1,12 +1,17 @@
 package com.example.denis.holodos.services;
 
+import com.example.denis.holodos.App;
+import com.example.denis.holodos.modules.receipts.Receipt;
 import com.example.denis.holodos.modules.receipts.Ticket;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -22,6 +27,7 @@ public class ReceiptService {
     private HttpURLConnection urlConnection;
     private BufferedReader reader;
     private StringBuilder resultJson;
+    private String resultJsonStr;
     private URL url;
     JSONObject jsonObject;
 
@@ -31,7 +37,7 @@ public class ReceiptService {
             String ACCEPT = "application/json";
             String CONTENT_TYPE = "application/json";
 
-            url = new URL("http://192.168.42.62:8080/service/api/users/" + login + "/receipts");
+            url = new URL(App.BaseUrl + "/service/api/users/" + login + "/receipts");
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -63,11 +69,81 @@ public class ReceiptService {
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return "error";
         } catch (JSONException e) {
             e.printStackTrace();
+            return "error";
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return resultJson.toString();
+
+        try {
+            resultJsonStr = resultJson.toString();
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            Receipt receipt = gson.fromJson(resultJsonStr, Receipt.class);
+        } catch (NullPointerException e) {
+            return "error";
+        }
+
+
+
+        return resultJsonStr;
+    }
+
+    public String getAllReceipts(String login) {
+        try {
+            URL url = new URL(App.BaseUrl + "/service/api/users/" + login + "/receipts");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+
+            resultJsonStr = buffer.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return resultJsonStr;
+    }
+
+    public String getByOrganization(String login) {
+        String ACCEPT = "application/json";
+        String CONTENT_TYPE = "application/json";
+        try {
+            URL url = new URL(App.BaseUrl + "/service/api/users/" + login + "/statistics/organization" + "?from=2017-12-03&to=2018-03-02");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("Accept", ACCEPT);
+            urlConnection.setRequestProperty("Content-Type", CONTENT_TYPE);
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+
+            resultJsonStr = buffer.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return resultJsonStr;
     }
 }

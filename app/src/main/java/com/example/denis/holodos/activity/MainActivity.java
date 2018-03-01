@@ -9,18 +9,27 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.example.denis.holodos.ParseTask.ParseTaskAllReceipt;
 import com.example.denis.holodos.ParseTask.ParseTaskLogin;
+import com.example.denis.holodos.ParseTask.ParseTaskReceipt;
+import com.example.denis.holodos.ParseTask.ParseTaskSortByMagazine;
 import com.example.denis.holodos.R;
-import com.example.denis.holodos.adapter.MyAdapter;
+import com.example.denis.holodos.adapter.PagerAdapter;
+import com.example.denis.holodos.adapter.fragments.MessageHistoryFragment;
 import com.example.denis.holodos.modules.receipts.Receipt;
 
-public class MainActivity extends finishedAsync {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MainActivity extends finishedAsync implements MessageHistoryFragment.onSomeEventListener {
 
     public static final int requestCodeMainActivity = 1;
     private SharedPreferences preferences;
     private ParseTaskLogin parseTaskLogin;
+    private ViewPager viewPager;
+    private PagerAdapter pagerAdapter;
 
     public static final String APP_PREFERENCES = "APP_PREFERENCES";
 
@@ -39,10 +48,17 @@ public class MainActivity extends finishedAsync {
             startActivity(authorizationActivity);
         }
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        pager.setAdapter(new MyAdapter(getSupportFragmentManager()));
-        tabs.setupWithViewPager(pager);
+//        pager = (ViewPager) findViewById(R.id.pager);
+//        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+//        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+//        tabs.setupWithViewPager(pager);
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -76,9 +92,31 @@ public class MainActivity extends finishedAsync {
         switch (requestCode) {
             case requestCodeMainActivity:
                 if (resultCode == RESULT_OK) {
-                Receipt receipt = (Receipt) data.getSerializableExtra("receipt");
+//                Receipt receipt = (Receipt) data.getSerializableExtra("receipt");
+//                break;
+                    String receipt = data.getStringExtra("receiptStr");
+                    String[] str = receipt.split("&");
+                            Map m = new HashMap<String, String>();
 
-                break;
+                            for (String s : str) {
+                                String[] split = s.split("=");
+                                switch (s.split("=")[0]) {
+                                    case "fn":
+                                        m.put("fn", split[1]);
+                                        break;
+                                    case "i":
+                                        m.put("i", split[1]);
+                                        break;
+                                    case "fp":
+                                        m.put("fp", split[1]);
+                                        break;
+                                }
+                            }
+                            SharedPreferences preferences = getSharedPreferences(MainActivity.APP_PREFERENCES, android.content.Context.MODE_PRIVATE);
+                            String login = preferences.getString("login", "");
+                            ParseTaskReceipt parseTaskReceipt = new ParseTaskReceipt(MainActivity.this);
+                            parseTaskReceipt.execute(login, (String) m.get("fn"), (String) m.get("i"), (String) m.get("fp"));
+                    break;
             }
             break;
         }
@@ -91,5 +129,40 @@ public class MainActivity extends finishedAsync {
             Intent authorizationActivity = new Intent(MainActivity.this, AuthorizationActivity.class);
             startActivity(authorizationActivity);
         }
+    }
+
+    @Override
+    public void finishedAsyncTask(List<Receipt> receipts) {
+        super.finishedAsyncTask(receipts);
+        MessageHistoryFragment.addAllOperators(receipts);
+    }
+
+    @Override
+    public void finishedAsyncTask(Receipt receipt) {
+        super.finishedAsyncTask(receipt);
+        refreshAllReceipts();
+    }
+
+    @Override
+    public void finishedAsyncTask(Map<String, Double> map) {
+        super.finishedAsyncTask(map);
+//        MessageHistoryFragment.
+    }
+
+    @Override
+    public void refreshAllReceipts() {
+        ParseTaskAllReceipt parseTaskAllReceipt = new ParseTaskAllReceipt(MainActivity.this);
+        parseTaskAllReceipt.execute(getSharedPreferences(APP_PREFERENCES, android.content.Context.MODE_PRIVATE).getString("login", ""));
+    }
+
+    @Override
+    public void refreshBySortMagazine() {
+        ParseTaskSortByMagazine parseTaskSortByMagazine = new ParseTaskSortByMagazine(MainActivity.this);
+        parseTaskSortByMagazine.execute(getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE).getString("login", "") );
+    }
+
+    @Override
+    public void refreshBySortItems() {
+
     }
 }

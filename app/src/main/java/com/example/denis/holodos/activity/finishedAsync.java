@@ -7,6 +7,9 @@ import android.widget.Toast;
 
 import com.example.denis.holodos.modules.receipts.Receipt;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Denis on 07.01.2018.
  */
@@ -37,4 +40,11 @@ public abstract class finishedAsync extends AppCompatActivity {
     public void finishedAsyncTask(Receipt receipt) {
         this.isReceipt = true;
     }
+
+    public void finishedAsyncTask(List<Receipt> receipts) {
+    }
+
+    public void finishedAsyncTask() {}
+
+    public void finishedAsyncTask(Map<String, Double> map) {};
 }
