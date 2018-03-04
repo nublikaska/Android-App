@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.example.denis.holodos.modules.receipts.Receipt;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,5 +47,5 @@ public abstract class finishedAsync extends AppCompatActivity {
 
     public void finishedAsyncTask() {}
 
-    public void finishedAsyncTask(Map<String, Double> map) {};
+    public void finishedAsyncTask(HashMap<String, Double> map) {};
 }

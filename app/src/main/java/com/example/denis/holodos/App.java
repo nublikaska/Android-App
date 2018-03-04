@@ -2,6 +2,10 @@ package com.example.denis.holodos;
 
 import android.app.Application;
 
+import com.example.denis.holodos.services.StatisticsService;
+
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -9,7 +13,7 @@ import java.util.List;
  */
 
 public class App extends Application {
-    public static final String BaseUrl = "http://192.168.42.52:8080" ;
+    public static final String BaseUrl = "http://192.168.0.41:8080" ;
 
     public static int[] getRgb(int Sum, int maxCount) {
         int count = (int)Sum;

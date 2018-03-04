@@ -19,6 +19,7 @@ import com.example.denis.holodos.adapter.PagerAdapter;
 import com.example.denis.holodos.adapter.fragments.MessageHistoryFragment;
 import com.example.denis.holodos.modules.receipts.Receipt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,9 +145,23 @@ public class MainActivity extends finishedAsync implements MessageHistoryFragmen
     }
 
     @Override
-    public void finishedAsyncTask(Map<String, Double> map) {
+    public void finishedAsyncTask(HashMap<String, Double> map) {
         super.finishedAsyncTask(map);
-//        MessageHistoryFragment.
+        List<Receipt> receipts = new ArrayList<>();
+
+        System.out.println("dsdddddddddddddddddddddddddddddddddd");
+        for (Map.Entry<String, Double> next : map.entrySet()) {
+            Receipt receipt = new Receipt();
+            receipt.setTotalSum(next.getValue());
+            receipt.setUser(next.getKey());
+            receipts.add(receipt);
+        }
+
+        for (Receipt r : receipts) {
+            System.out.println(r.getUser() + " " + r.getTotalSum());
+        }
+
+        MessageHistoryFragment.addAllOperators(receipts);
     }
 
     @Override

@@ -38,6 +38,9 @@ public class MessageHistoryFragment extends Fragment implements SwipeRefreshLayo
     private boolean isSortMagazine = false;
     private boolean isSortItems = false;
 
+     FloatingActionButton myFab;
+    FloatingActionButton fabSortMagazine;
+    FloatingActionButton fabSortItems;
     public MessageHistoryFragment() {}
 
     @Override
@@ -69,35 +72,36 @@ public class MessageHistoryFragment extends Fragment implements SwipeRefreshLayo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.message_history_fragment, container, false);
 
-        final FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fab);
-        final FloatingActionButton fabSortMagazine = (FloatingActionButton) view.findViewById(R.id.fab_sort_magazine);
-        final FloatingActionButton fabSortItems = (FloatingActionButton) view.findViewById(R.id.fab_sort_items);
+        myFab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fabSortMagazine = (FloatingActionButton) view.findViewById(R.id.fab_sort_magazine);
+        fabSortItems = (FloatingActionButton) view.findViewById(R.id.fab_sort_items);
+
         myFab.setColorNormal(R.color.colorPrimaryDark);
-//        myFab.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                fabSortItems.setVisibility(View.VISIBLE);
-//                fabSortMagazine.setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        fabSortItems.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                myFab.setColorNormal(R.color.colorAccent);
-//                fabSortItems.setColorNormal(R.color.colorAccent);
-//                isSortItems = true;
-//            }
-//        });
-//
-//        fabSortMagazine.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                myFab.setColorNormal(R.color.colorAccent);
-//                fabSortMagazine.setColorNormal(R.color.colorAccent);
-//                isSortMagazine = true;
-//                onRefresh();
-//            }
-//        });
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                fabSortItems.setVisibility(View.VISIBLE);
+                fabSortMagazine.setVisibility(View.VISIBLE);
+            }
+        });
+
+        fabSortItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myFab.setColorNormal(R.color.colorAccent);
+                fabSortItems.setColorNormal(R.color.colorAccent);
+                isSortItems = true;
+            }
+        });
+
+        fabSortMagazine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myFab.setColorNormal(R.color.colorAccent);
+                fabSortMagazine.setColorNormal(R.color.colorAccent);
+                isSortMagazine = true;
+                onRefresh();
+            }
+        });
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -158,15 +162,17 @@ public class MessageHistoryFragment extends Fragment implements SwipeRefreshLayo
             public void run() {
                 operators.clear();
 
-//                if (isSortMagazine) {
-//                    someEventListener.refreshBySortMagazine();
-//                }
-//                else if (isSortItems) {
-//                    someEventListener.refreshBySortItems();
-//                } else {
+                if (isSortMagazine) {
+                    someEventListener.refreshBySortMagazine();
+                }
+                else if (isSortItems) {
+                    someEventListener.refreshBySortItems();
+                } else {
                     someEventListener.refreshAllReceipts();
-//                }
+                }
                 // Отменяем анимацию обновления
+                fabSortItems.setVisibility(View.INVISIBLE);
+                fabSortMagazine.setVisibility(View.INVISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 2000);

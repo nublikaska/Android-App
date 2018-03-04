@@ -1,5 +1,6 @@
 package com.example.denis.holodos.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,11 @@ import com.example.denis.holodos.R;
 import com.example.denis.holodos.adapter.ReceiptAdapter;
 import com.example.denis.holodos.adapter.fragments.MessageHistoryFragment;
 import com.example.denis.holodos.modules.receipts.Receipt;
+import com.example.denis.holodos.services.StatisticsService;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
 
 /**
  * Created by Denis on 01.03.2018.

@@ -31,7 +31,6 @@ public class ReceiptService {
     private URL url;
     JSONObject jsonObject;
 
-
     public String addReceipt(String login, String fiscalDriveId, String fiscalDocumentNumber, String fiscalId) {
         try {
             String ACCEPT = "application/json";
@@ -144,6 +143,7 @@ public class ReceiptService {
             e.printStackTrace();
             return "";
         }
+        System.out.println(resultJsonStr);
         return resultJsonStr;
     }
 }

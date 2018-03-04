@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +43,11 @@ public class ParseTaskSortByMagazine extends AsyncTask<String, Void, String> {
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        List<Receipt> receipts = new ArrayList<Receipt>();
-
-        Map<String, Double> map = gson.fromJson(JsonDocumentMap, Map.class);
+        HashMap<String, Double> map = new HashMap<>();
+        map =  gson.fromJson(JsonDocumentMap, map.getClass());
+        for (Map.Entry<String, Double> next :map.entrySet()) {
+            System.out.println(next.getValue() + " " + next.getValue());
+        }
 
         activity.finishedAsyncTask(map);
     }
